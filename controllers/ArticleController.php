@@ -4,6 +4,9 @@ require(__DIR__ . "/../models/Article.php");
 require(__DIR__ . "/../connection/connection.php");
 require(__DIR__ . "/../services/ArticleService.php");
 require(__DIR__ . "/../services/ResponseService.php");
+// $response =[];
+// $response["status"]=200;
+
 
 class ArticleController{
     
@@ -26,9 +29,34 @@ class ArticleController{
     public function deleteAllArticles(){
         die("Deleting...");
     }
+
     public function addArticle() {
-        
+        $input = json_decode(file_get_contents('php://input'), true);
+        $title       = trim($input['title']       ?? '');
+        $category       = trim($input['category']       ?? '');
+        $author       = trim($input['author']       ?? '');
+        $description       = trim($input['description']       ?? '');
+
+    // require(__DIR__ . "/../models/Article.php"); caused class duplication error
+    require(__DIR__ . "/../connection/connection.php");
+
+        try {
+            $newId = Article::createArticle($mysqli, [
+                'title' => $title,
+                'category'=>$category,
+                'author'=>$author,
+                'description' =>$description 
+            ]);
+
+        } catch (Exception $e){
+                http_response_code(500);
+                echo json_encode([
+                'error'   => 'Could not add article',
+                'details' => $e->getMessage()
+                ]);
+            }
     }
+
 }
 
 //To-Do:

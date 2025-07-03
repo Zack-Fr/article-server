@@ -1,6 +1,6 @@
 
 <?php 
-require __DIR__ .'/../config/connection.php';
+require __DIR__ .'/../connection/connection.php';
 // This block is used to extract the route name from the URL
 //----------------------------------------------------------
 // Define your base directory 
@@ -24,21 +24,35 @@ $method = $_SERVER['REQUEST_METHOD'];
 // This block is used to extract the route name from the URL
 //----------------------------------------------------------
 
-switch ("$method $request"){
-//Methods and apis
-//--------------- Articles Api's
-    case 'GET /articles':
-        require __DIR__. '/../controllers/ArticleController.php';
-    case 'POST /delete_articles':
-        require __DIR__. '/../controllers/ArticleController.php';
-//--------------- User Api's
-    case 'POST /login':
-        require __DIR__. '/../controllers/UserController.php';
-    case 'POST /register':
-        require __DIR__. '/../controllers/UserController.php';
-    }
+// switch ("$method $request"){
+// //Methods and apis
+// //--------------- Articles Api's
+//     case 'GET /articles':
+//         require __DIR__. '/../controllers/ArticleController.php';
+//     case 'POST /delete_articles':
+//         require __DIR__. '/../controllers/ArticleController.php';
+// //--------------- User Api's
+//     case 'POST /login':
+//         require __DIR__. '/../controllers/AuthController.php';
+//     case 'POST /register':
+//         require __DIR__. '/../controllers/AuthController.php';
+//         break;
+//    //fallback     
+//     default:
+//         http_response_code(404);
+//         echo json_encode([
+//             'error' => 'Endpoint not found',
+//             'method' => $method,
+//             'uri'    => $request,
+//             'scriptName' => $base_dir,
+//             // 'requestUri' =>$requestUri
+            
+//         ]);
+        
+//         break;
+//     }
 
-    
+
 //Routing starts here (Mapping between the request and the controller & method names)
 //It's an key-value array where the value is an key-value array
 //----------------------------------------------------------
@@ -46,13 +60,15 @@ switch ("$method $request"){
 corresponding controller and method names. */
 $apis = [
     '/articles'         => ['controller' => 'ArticleController', 'method' => 'getAllArticles'],
+    
     '/delete_articles'         => ['controller' => 'ArticleController', 'method' => 'deleteAllArticles'],
+
+    '/add_article'         => ['controller' => 'ArticleController', 'method' => 'addArticle'],
 
     '/login'         => ['controller' => 'AuthController', 'method' => 'login'],
     '/register'         => ['controller' => 'AuthController', 'method' => 'register'],
 
 ];
-
 //----------------------------------------------------------
 
 

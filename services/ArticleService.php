@@ -12,6 +12,4 @@ class ArticleService {
         return $results;
     }
 
-
-
 }
