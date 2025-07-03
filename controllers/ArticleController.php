@@ -63,6 +63,39 @@ class ArticleController{
                 ]);
             }
     }
+    public function getArticle() {
+        session_start();
+        header('Content-Type: application/json');
+        require(__DIR__ . "/../connection/connection.php");
+        
+        $response = [];
+        $response ["status"]=200;
+        
+        if(!isset($_GET["id"])){
+        $movies = Article::all($mysqli);
+        $response["articles"] = [];
+        
+        foreach($movies as $m){
+            $response["articles"][] =$m->toArray();
+        }
+        echo json_encode($response);
+        return;
+        }
+        $id = $_GET["id"];
+        $article = Article::find($mysqli,$id);
+        $response["articles"] = $article->toArray();
+
+        echo json_encode($response);
+        return;
+        // if (empty($_SESSION['id'])) {
+        //     http_response_code(401);
+        //     echo json_encode(['error'=>'Not authenticated']);
+        //     exit;
+        // }
+        // $articleId = $_SESSION ['id'];
+        // $article = Article::find($mysqli, $articleId);
+    
+    }
 
 }
 

@@ -60,10 +60,14 @@ $method = $_SERVER['REQUEST_METHOD'];
 corresponding controller and method names. */
 $apis = [
     '/articles'         => ['controller' => 'ArticleController', 'method' => 'getAllArticles'],
-    
+
     '/delete_articles'         => ['controller' => 'ArticleController', 'method' => 'deleteAllArticles'],
 
     '/add_article'         => ['controller' => 'ArticleController', 'method' => 'addArticle'],
+
+    '/update_article'         => ['controller' => 'ArticleController', 'method' => 'updateArticle'],
+
+    '/get_article'         => ['controller' => 'ArticleController', 'method' => 'getArticle'],
 
     '/login'         => ['controller' => 'AuthController', 'method' => 'login'],
     '/register'         => ['controller' => 'AuthController', 'method' => 'register'],
