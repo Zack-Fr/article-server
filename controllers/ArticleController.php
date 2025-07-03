@@ -48,6 +48,13 @@ class ArticleController{
                 'description' =>$description 
             ]);
 
+                http_response_code(201);
+                echo json_encode([
+                'status'   => 'success',
+                'movie_id' => $newId,
+                'message'  => 'Film added successfully'
+            ]);
+
         } catch (Exception $e){
                 http_response_code(500);
                 echo json_encode([
