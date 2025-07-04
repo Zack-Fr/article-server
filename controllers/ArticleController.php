@@ -64,8 +64,8 @@ class ArticleController{
             }
     }
     public function getArticle() {
-        session_start();
-        header('Content-Type: application/json');
+        // session_start();
+        // header('Content-Type: application/json');
         require(__DIR__ . "/../connection/connection.php");
         
         $response = [];
@@ -87,15 +87,62 @@ class ArticleController{
 
         echo json_encode($response);
         return;
-        // if (empty($_SESSION['id'])) {
-        //     http_response_code(401);
-        //     echo json_encode(['error'=>'Not authenticated']);
-        //     exit;
-        // }
-        // $articleId = $_SESSION ['id'];
-        // $article = Article::find($mysqli, $articleId);
-    
     }
+    public function updateArticle()
+{
+    require __DIR__ . '/../connection/connection.php';
+    session_start();
+    header('Content-Type: application/json');
+
+    
+    if (! isset($_GET['id'])) {
+        $all = Article::all($mysqli);
+        echo json_encode([
+            'status'   => 200,
+            'articles' => array_map(fn($a) => $a->toArray(), $all),
+        ]);
+        exit;
+    }
+
+    $id      = (int) $_GET['id'];
+    $article = Article::find($mysqli, $id);
+    if (! $article) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Article not found']);
+        exit;
+    }
+
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        // fields
+        if (isset($input['title'])) {
+            $article->setAuthor($input['title']);
+        }
+        if (isset($input['category'])) {
+            $article->setTitle($input['category']);
+        }
+        if (isset($input['author'])) {
+            $article->setTitle($input['author']);
+        }
+        if (isset($input['description'])) {
+            $article->setTitle($input['description']);
+        }
+        
+
+        if (! $article->update($mysqli)) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Could not update article']);
+            exit;
+        }
+    }
+    //     echo json_encode([
+    //         'status'  => 200,
+    //         'article' => $article->toArray(),
+    // ]);
+    exit;
+}
 
 }
 

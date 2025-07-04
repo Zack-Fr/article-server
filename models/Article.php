@@ -45,7 +45,13 @@ class Article extends Model {
         }
         return $mysqli->insert_id;
     }
-
+    public function update(mysqli $mysqli): bool {
+    $sql = "UPDATE " . static::$table . " SET title = ?, category = ?, author = ?, description = ? WHERE id = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("ssssi", 
+    $this->title, $this->category, $this->author, $this->description, $this->id);
+    return $stmt->execute();
+    }
     public function getId(): int {
         return $this->id;
     }
