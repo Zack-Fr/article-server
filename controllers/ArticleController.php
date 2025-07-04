@@ -27,8 +27,59 @@ class ArticleController{
     }
 
     public function deleteAllArticles(){
+        require(__DIR__ . "/../connection/connection.php");
+        try{
+            $deleteArticles = Article::deleteAllArticles($mysqli);
+        }
+        catch (Exception $e){
+                http_response_code(500);
+                echo json_encode([
+                'error'   => '',
+                'details' => $e->getMessage()
+                ]);
+        }
         die("Deleting...");
     }
+
+public function deleteById()
+{
+    header('Content-Type: application/json');
+
+    $id = null;
+    if (isset($_GET['id']) && trim($_GET['id']) !== '') {
+        $id = (int) $_GET['id'];
+    } elseif (isset($_POST['id']) && trim($_POST['id']) !== '') {
+        $id = (int) $_POST['id'];
+    }
+
+    require __DIR__ . '/../connection/connection.php';
+    try {
+        $deleted = Article::deleteById($mysqli, $id);
+        if ($deleted) {
+            echo json_encode([
+                'success' => true,
+                'message' => "Article $id deleted."
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'error'   => 'Could not delete article'
+            ]);
+        }
+    } catch (\Exception $e) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error'   => 'Exception thrown',
+            'details' => $e->getMessage()
+        ]);
+    }
+
+    exit;
+}
+
+
 
     public function addArticle() {
         $input = json_decode(file_get_contents('php://input'), true);
@@ -89,13 +140,13 @@ class ArticleController{
         return;
     }
     public function updateArticle()
-{
+    {
     require __DIR__ . '/../connection/connection.php';
     session_start();
     header('Content-Type: application/json');
 
     
-    if (! isset($_GET['id'])) {
+    if (!isset($_GET['id'])) {
         $all = Article::all($mysqli);
         echo json_encode([
             'status'   => 200,
@@ -106,6 +157,7 @@ class ArticleController{
 
     $id      = (int) $_GET['id'];
     $article = Article::find($mysqli, $id);
+
     if (! $article) {
         http_response_code(404);
         echo json_encode(['error' => 'Article not found']);
@@ -142,7 +194,7 @@ class ArticleController{
     //         'article' => $article->toArray(),
     // ]);
     exit;
-}
+    }
 
 }
 

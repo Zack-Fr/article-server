@@ -63,6 +63,8 @@ $apis = [
 
     '/delete_articles'         => ['controller' => 'ArticleController', 'method' => 'deleteAllArticles'],
 
+    '/delete_byId'         => ['controller' => 'ArticleController', 'method' => 'deleteById'],
+
     '/add_article'         => ['controller' => 'ArticleController', 'method' => 'addArticle'],
 
     '/update_article'         => ['controller' => 'ArticleController', 'method' => 'updateArticle'],

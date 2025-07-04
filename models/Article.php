@@ -46,11 +46,32 @@ class Article extends Model {
         return $mysqli->insert_id;
     }
     public function update(mysqli $mysqli): bool {
+
     $sql = "UPDATE " . static::$table . " SET title = ?, category = ?, author = ?, description = ? WHERE id = ?";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param("ssssi", 
     $this->title, $this->category, $this->author, $this->description, $this->id);
     return $stmt->execute();
+    }
+    public static function deleteAllArticles(mysqli $mysqli): bool {
+        $sql = 'TRUNCATE TABLE ' . static::$table;//error caused as to a space between concatenated string I needed to add a space before the single quote
+        $stmt = $mysqli->prepare($sql);
+        echo json_encode($sql);
+        return $stmt->execute();
+    }
+    public static function deleteById(mysqli $mysqli, int $id): bool {
+
+        $sql = "Delete FROM " . static::$table . " WHERE id = ?"; //error 
+        $stmt = $mysqli->prepare($sql);
+
+        if(! $stmt){
+            error_log("MySQL prepare error: " . $mysqli->error);
+            return false;
+        }
+        $stmt->bind_param("i", $id);
+        echo json_encode($sql);
+        // $stmt->error;
+        return $stmt->execute();
     }
     public function getId(): int {
         return $this->id;
