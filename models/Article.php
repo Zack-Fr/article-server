@@ -59,7 +59,7 @@ class Article extends Model {
         echo json_encode($sql);
         return $stmt->execute();
     }
-    public static function deleteById(mysqli $mysqli, int $id): bool {
+    public static function deleteArticleById(mysqli $mysqli, int $id): bool {
 
         $sql = "Delete FROM " . static::$table . " WHERE id = ?"; //error 
         $stmt = $mysqli->prepare($sql);
@@ -73,6 +73,51 @@ class Article extends Model {
         // $stmt->error;
         return $stmt->execute();
     }
+
+    public static function getCategories(mysqli $mysqli){
+        $sql = 'SELECT DISTINCT category FROM ' . static::$table;
+        $stmt = $mysqli->prepare($sql);
+        if(! $stmt){
+            error_log("MySQL prepare error: ". $mysqli->error);
+            return false;
+        }
+        if (! $stmt->execute()) {
+        error_log("MySQL execute error: " . $stmt->error);
+        return [];
+        }
+        $result = $stmt->get_result();
+        $categories =[];
+
+        while($row = $result->fetch_assoc()){
+            $categories[] =$row['category'];
+        }
+        $stmt->close();
+        
+        return $categories;
+    }
+
+    public static function getCategoriesById(mysqli $mysqli, int $id){
+        $sql = 'SELECT category FROM ' . static::$table .' WHERE id = ?';
+
+        $stmt = $mysqli->prepare($sql);
+        if(! $stmt){
+            error_log("MySQL prepare error: ". $mysqli->error);
+            return false;
+        }
+        $stmt->bind_param('i', $id);
+        
+        if (! $stmt->execute()) {
+        error_log("MySQL execute error: " . $stmt->error);
+        return [];
+        }
+
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $stmt->close();
+        
+        return $row['category'] ?? null;
+    }
+
     public function getId(): int {
         return $this->id;
     }
@@ -88,7 +133,7 @@ class Article extends Model {
     public function getDescription(): string {
         return $this->description;
     }
-
+    
     public function setTitle(string $title){
         $this->title = $title;
     }

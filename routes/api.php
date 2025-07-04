@@ -59,17 +59,21 @@ $method = $_SERVER['REQUEST_METHOD'];
 /* The `` array is serving as a routing table in the PHP code. It maps specific URL routes to
 corresponding controller and method names. */
 $apis = [
-    '/articles'         => ['controller' => 'ArticleController', 'method' => 'getAllArticles'],
+    '/get_articles'         => ['controller' => 'ArticleController', 'method' => 'getAllArticles'],
 
     '/delete_articles'         => ['controller' => 'ArticleController', 'method' => 'deleteAllArticles'],
 
-    '/delete_byId'         => ['controller' => 'ArticleController', 'method' => 'deleteById'],
+    '/delete_article_byId'         => ['controller' => 'ArticleController', 'method' => 'deleteById'],
 
     '/add_article'         => ['controller' => 'ArticleController', 'method' => 'addArticle'],
 
     '/update_article'         => ['controller' => 'ArticleController', 'method' => 'updateArticle'],
 
-    '/get_article'         => ['controller' => 'ArticleController', 'method' => 'getArticle'],
+    '/get_article_id'         => ['controller' => 'ArticleController', 'method' => 'getArticleById'],
+
+    '/get_categories'         => ['controller' => 'ArticleController', 'method' => 'getCategories'],
+
+    '/get_categories_by_id'         => ['controller' => 'ArticleController', 'method' => 'getCategoriesById'],
 
     '/login'         => ['controller' => 'AuthController', 'method' => 'login'],
     '/register'         => ['controller' => 'AuthController', 'method' => 'register'],
