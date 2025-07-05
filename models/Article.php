@@ -73,7 +73,6 @@ class Article extends Model {
         // $stmt->error;
         return $stmt->execute();
     }
-
     public static function getCategories(mysqli $mysqli){
         $sql = 'SELECT DISTINCT category FROM ' . static::$table;
         $stmt = $mysqli->prepare($sql);
@@ -95,28 +94,55 @@ class Article extends Model {
         
         return $categories;
     }
-
-    public static function getCategoriesById(mysqli $mysqli, int $id){
-        $sql = 'SELECT category FROM ' . static::$table .' WHERE id = ?';
+    /**
+     * Summary of getCategoriesById
+     * @param mysqli $mysqli
+     * @param int[] $ids
+     * @return string[] array of categories
+     */
+    public static function getCategoriesById(mysqli $mysqli, array $ids){
+        $ids = array_map('intval', $ids);//extract the integers from the request 
+        if(count($ids)=== 0){
+            return [];
+        }
+        //a placeholder for the ids array list
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = "SELECT category FROM " . static::$table . " WHERE id IN ($placeholders)";
 
         $stmt = $mysqli->prepare($sql);
         if(! $stmt){
             error_log("MySQL prepare error: ". $mysqli->error);
             return false;
         }
-        $stmt->bind_param('i', $id);
+        //bind all ids
+        $types = str_repeat('i', count($ids));
+        //bind mysqli for each id
+        $refs = [];
+        $refs [] = & $types;
+        foreach($ids as $i => $val){
+            $refs[] = & $ids[$i];
+        }
+        call_user_func_array([$stmt, 'bind_param'], $refs);
         
         if (! $stmt->execute()) {
         error_log("MySQL execute error: " . $stmt->error);
         return [];
         }
-
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $stmt->close();
         
-        return $row['category'] ?? null;
+        $result = $stmt->get_result();
+        $categories = [];
+        while ($row = $result->fetch_assoc()){
+            $categories[] = $row['category'];
+        }
+        
+        $stmt->close();
+        return $categories;
     }
+        
+        
+
+
+
 
     public function getId(): int {
         return $this->id;

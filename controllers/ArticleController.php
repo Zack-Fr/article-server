@@ -41,18 +41,26 @@ class ArticleController{
     {
         header('Content-Type: application/json');
         require(__DIR__ . "/../connection/connection.php");
+
+        $ids = $_GET['id']  ?? $_GET['ids'] ?? [];
+
         if(!isset($_GET["id"])){
             echo ResponseService::error_response('Missing id');
             exit;
         }
-
-        $id = (int)$_GET['id'];
-        $category = Article::getCategoriesById($mysqli, $id);
-
-        if ($category === null){
+        //turn input into an array
+        if(! is_array($ids)){
+            $ids = explode(',',(string)$ids);
+        }
+        
+        $categories = Article::getCategoriesById($mysqli, $ids);
+        // echo ('what the hell');
+        
+        if ($categories === null){
             echo ResponseService::error_response('No category found for this article id');
         } else{
-            echo ResponseService::success_response($category);
+            echo ResponseService::success_response($categories);
+            exit;
         }
     }
     
