@@ -42,13 +42,14 @@ class ArticleController{
         header('Content-Type: application/json');
         require(__DIR__ . "/../connection/connection.php");
 
+        //accept id or ids
         $ids = $_GET['id']  ?? $_GET['ids'] ?? [];
 
         if(!isset($_GET["id"])){
             echo ResponseService::error_response('Missing id');
             exit;
         }
-        //turn input into an array
+        //accept ?id=2,3... and turn it to array
         if(! is_array($ids)){
             $ids = explode(',',(string)$ids);
         }
@@ -63,7 +64,13 @@ class ArticleController{
             exit;
         }
     }
-    
+    public static function addNewCategory(){
+        require(__DIR__ . "/../connection/connection.php");
+
+        
+        $newCategory = Article::addNewCategory($mysqli,$data);
+        echo json_encode([$data]);
+    }
     
     public function addArticle() {
         $input = json_decode(file_get_contents('php://input'), true);
@@ -178,8 +185,8 @@ class ArticleController{
             //         'article' => $article->toArray(),
             // ]);
             exit;
-        }
-        public function deleteAllArticles(){
+    }
+    public function deleteAllArticles(){
             require(__DIR__ . "/../connection/connection.php");
             try{
                 $deleteArticles = Article::deleteAllArticles($mysqli);
@@ -192,9 +199,9 @@ class ArticleController{
                     ]);
             }
             die("Deleting...");
-        }
+    }
     
-        public function deleteArticleById()
+    public function deleteArticleById()
     {
         header('Content-Type: application/json');
     
@@ -230,8 +237,7 @@ class ArticleController{
         }
     
         exit;
-        }
-        
+    }
     }
     
     //To-Do:

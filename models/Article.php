@@ -138,7 +138,33 @@ class Article extends Model {
         $stmt->close();
         return $categories;
     }
+    
+    public static function addNewCategory(mysqli $mysqli, array $data): int|string{
+        require(__DIR__ . "/../connection/connection.php");
+
+        $sql= "INSERT INTO" . static::$table . 
+        "(id, category)
+        VALUE(?, ?)";
+
+        $stmt = $mysqli->prepare($sql);
+        if(! $stmt){
+            throw new Exception('preparing the SQl Failed: ' . $stmt->error);
+        }
+
+        $stmt->bind_param('is',
+                $data['id'],
+                // $data['title'],
+                $data['category'],
+                // $data['author'],
+                // $data['description'],
+        );
+
+        if(! $stmt->execute()){
+            throw new Exception('Execution of the query failed '. $stmt->error);
+        }
+        return $mysqli->insert_id;
         
+    }
         
 
 
