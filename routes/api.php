@@ -72,11 +72,13 @@ $apis = [
 
     '/get_article_id'         => ['controller' => 'ArticleController', 'method' => 'getArticleById'],
 //================================categories
-    '/get_categories'         => ['controller' => 'ArticleController', 'method' => 'getCategories'],
+    '/get_categories'         => ['controller' => 'CategoryController', 'method' => 'getCategories'],
 
-    '/get_categories_by_id'         => ['controller' => 'ArticleController', 'method' => 'getCategoriesById'],
+    '/update_category'         => ['controller' => 'CategoryController', 'method' => 'updateCategory'],
+    
+    '/add_new_category'         => ['controller' => 'CategoryController', 'method' => 'addNewCategory'],
 
-    '/add_new_category'         => ['controller' => 'ArticleController', 'method' => 'addNewCategory'],
+//===============================user
 
     '/login'         => ['controller' => 'AuthController', 'method' => 'login'],
     '/register'         => ['controller' => 'AuthController', 'method' => 'register'],

@@ -8,7 +8,7 @@ class ResponseService {
         $response["payload"] = $payload;
         return json_encode($response);
     }
-        public static function error_response($payload){
+    public static function error_response($payload){
         $response = [];
         $response["status"] = 400;
         $response["payload"] = $payload;

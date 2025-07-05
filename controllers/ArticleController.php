@@ -25,52 +25,6 @@ class ArticleController{
         echo ResponseService::success_response($article);
         return;
     }
-
-    
-    public function getCategories()
-    {
-        header('Content-Type: application/json');
-        require(__DIR__ . "/../connection/connection.php");
-        
-        $categories = Article::getCategories($mysqli);
-        echo ResponseService::success_response($categories);
-        exit;
-    }
-    
-    public function getCategoriesById()
-    {
-        header('Content-Type: application/json');
-        require(__DIR__ . "/../connection/connection.php");
-
-        //accept id or ids
-        $ids = $_GET['id']  ?? $_GET['ids'] ?? [];
-
-        if(!isset($_GET["id"])){
-            echo ResponseService::error_response('Missing id');
-            exit;
-        }
-        //accept ?id=2,3... and turn it to array
-        if(! is_array($ids)){
-            $ids = explode(',',(string)$ids);
-        }
-        
-        $categories = Article::getCategoriesById($mysqli, $ids);
-        // echo ('what the hell');
-        
-        if ($categories === null){
-            echo ResponseService::error_response('No category found for this article id');
-        } else{
-            echo ResponseService::success_response($categories);
-            exit;
-        }
-    }
-    public static function addNewCategory(){
-        require(__DIR__ . "/../connection/connection.php");
-
-        
-        $newCategory = Article::addNewCategory($mysqli,$data);
-        echo json_encode([$data]);
-    }
     
     public function addArticle() {
         $input = json_decode(file_get_contents('php://input'), true);
@@ -79,7 +33,6 @@ class ArticleController{
         $author       = trim($input['author']       ?? '');
         $description       = trim($input['description']       ?? '');
         
-        // require(__DIR__ . "/../models/Article.php"); caused class duplication error
         require(__DIR__ . "/../connection/connection.php");
         
         try {
@@ -87,8 +40,7 @@ class ArticleController{
                 'title' => $title,
                 'category'=>$category,
                 'author'=>$author,
-                'description' =>$description 
-            ]);
+                'description' =>$description ]);
             
             http_response_code(201);
             echo json_encode([
@@ -132,8 +84,8 @@ class ArticleController{
     }
     public function updateArticle()
     {
-        require __DIR__ . '/../connection/connection.php';
         session_start();
+        require __DIR__ . '/../connection/connection.php';
         header('Content-Type: application/json');
         
         
@@ -154,8 +106,6 @@ class ArticleController{
             echo json_encode(['error' => 'Article not found']);
             exit;
         }
-        
-        
         if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             $input = json_decode(file_get_contents('php://input'), true);
             
@@ -163,27 +113,22 @@ class ArticleController{
             if (isset($input['title'])) {
                 $article->setAuthor($input['title']);
             }
-            if (isset($input['category'])) {
-                $article->setTitle($input['category']);
-            }
             if (isset($input['author'])) {
                 $article->setTitle($input['author']);
             }
             if (isset($input['description'])) {
-                $article->setTitle($input['description']);
+                $article->setDescription($input['description']);
             }
-            
-            
             if (! $article->update($mysqli)) {
                 http_response_code(500);
                 echo json_encode(['error' => 'Could not update article']);
                 exit;
             }
         }
-        //     echo json_encode([
-            //         'status'  => 200,
-            //         'article' => $article->toArray(),
-            // ]);
+            echo json_encode([
+                    'status'  => 200,
+                    'article' => $article->toArray(),
+            ]);
             exit;
     }
     public function deleteAllArticles(){
