@@ -59,24 +59,24 @@ class ArticleController{
     }
     public function getArticleById() {
         // session_start();
-        // header('Content-Type: application/json');
+        header('Content-Type: application/json');
         require(__DIR__ . "/../connection/connection.php");
         
         $response = [];
         $response ["status"]=200;
         
         if(!isset($_GET["id"])){
-            $movies = Article::all($mysqli);
+            $articles = Article::all($mysqli);
             $response["articles"] = [];
             
-            foreach($movies as $m){
-                $response["articles"][] =$m->toArray();
+            foreach($articles as $a){
+                $response["articles"][] =$a->toArray();
             }
             echo json_encode($response);
             return;
         }
         $id = $_GET["id"];
-        $article = Article::find($mysqli,$id);
+        $article = Article::find($mysqli, $id);
         $response["articles"] = $article->toArray();
         
         echo json_encode($response);
@@ -125,6 +125,7 @@ class ArticleController{
                 exit;
             }
         }
+        
             echo json_encode([
                     'status'  => 200,
                     'article' => $article->toArray(),
@@ -145,7 +146,6 @@ class ArticleController{
             }
             die("Deleting...");
     }
-    
     public function deleteArticleById()
     {
         header('Content-Type: application/json');

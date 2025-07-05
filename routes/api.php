@@ -75,6 +75,10 @@ $apis = [
     '/get_categories'         => ['controller' => 'CategoryController', 'method' => 'getCategories'],
 
     '/update_category'         => ['controller' => 'CategoryController', 'method' => 'updateCategory'],
+
+    '/delete_category_by_id'         => ['controller' => 'CategoryController', 'method' => 'deleteCategoryById'],
+
+    '/delete_all_categories'         => ['controller' => 'CategoryController', 'method' => 'deleteAllCategories'],
     
     '/add_new_category'         => ['controller' => 'CategoryController', 'method' => 'addNewCategory'],
 

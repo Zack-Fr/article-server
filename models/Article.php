@@ -4,8 +4,8 @@ require_once("Model.php");
 class Article extends Model {
 
     private int $id; 
+    private int $category;
     private string $title;
-
     private string $author; 
     private string $description; 
     
@@ -82,6 +82,10 @@ class Article extends Model {
         return $this->title;
     }
 
+    public function getCategory(): int {
+    return $this->category;
+    }
+
     public function getAuthor(): string {
         return $this->author;
     }
@@ -92,6 +96,10 @@ class Article extends Model {
     
     public function setTitle(string $title){
         $this->title = $title;
+    }
+
+    public function setCategory(int $category){
+    $this->category = $category;
     }
 
     public function setAuthor(string $author){

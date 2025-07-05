@@ -22,10 +22,15 @@ class CategoryController {
             return;
         }
 
+        if(isset($_GET["id"])){
             $id= $_GET["id"];
             $categories = Category::find($mysqli, $id)->toArray();
             echo ResponseService::success_response($categories);
             return;
+        }
+        else {
+            echo ResponseService::error_response('Id number does not exist');
+        }
     }
 
     // public function getCategoriesById()
@@ -132,5 +137,67 @@ class CategoryController {
                     'category' => $category->toArray(),
             ]);
             exit;
+    }
+
+    public function deleteCategoryById()
+    {
+        header('Content-Type: application/json');
+    
+        $id = null;
+        if (isset($_GET['id']) && trim($_GET['id']) !== '') {
+            $id = (int) $_GET['id'];
+        } elseif (isset($_POST['id']) && trim($_POST['id']) !== '') {
+            $id = (int) $_POST['id'];
         }
+    
+        require __DIR__ . '/../connection/connection.php';
+        try {
+            $deleted = Category::deleteCategoryById($mysqli, $id);
+            if ($deleted) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Article $id deleted."
+                ]);
+            } else {
+                http_response_code(500);
+                echo json_encode([
+                    'success' => false,
+                    'error'   => 'Could not delete article'
+                ]);
+            }
+        } catch (\Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'error'   => 'Exception thrown',
+                'details' => $e->getMessage()
+            ]);
+        }
+    
+        exit;
+    }
+
+    public function deleteAllCategories(){
+        header('Content-Type: application/json');
+        $input   = json_decode(file_get_contents('php://input'), true);
+        $name    = trim($input['name']    ?? '');
+        $content = trim($input['content'] ?? '');
+        require(__DIR__ . "/../connection/connection.php");
+        try{
+                $deleted = Category::deleteAllCategories($mysqli, $name, $content);
+                echo json_encode([
+                'success'=>true,
+                'deleted'=>$deleted
+        ]); 
+            }
+            catch (Exception $e){
+                    http_response_code(500);
+                    echo json_encode([
+                    'error'   => '',
+                    'details' => $e->getMessage()
+                    ]);
+            }
+            die("Deleting...");
+    }
+
 }

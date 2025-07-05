@@ -44,6 +44,40 @@ class Category extends Model{
     return $stmt->execute();
     }
 
+    public static function deleteCategoryById(mysqli $mysqli, int $id): bool {
+
+        // $sql = "Delete FROM " . static::$table . " WHERE id = ?"; //error 
+        $sql = 'TRUNCATE TABLE . static::$table';
+        $stmt = $mysqli->prepare($sql);
+
+        if(! $stmt){
+            error_log("MySQL prepare error: " . $mysqli->error);
+            return false;
+        }
+        $stmt->bind_param("i", $id);
+        echo json_encode($sql);
+        // $stmt->error;
+        return $stmt->execute();
+    }
+
+    public static function deleteAllCategories(mysqli $mysqli, string $name, string $content): int {
+        $sql = "DELETE FROM " . static::$table . 
+        " WHERE name = ? AND content = ?";
+
+        $stmt = $mysqli->prepare($sql);
+        if(! $stmt){
+            throw new Exception($mysqli->error);
+        }
+        $stmt->bind_param("ss", $name, $content);
+        // echo json_encode($sql);
+        if(! $stmt->execute()){
+            throw new Exception($stmt->error);
+        }
+        $deleted = $stmt->affected_rows;
+        $stmt->close();
+        return $deleted;
+    }
+//==================================
     public function setName(string $name){
         $this->name = $name;
     }
