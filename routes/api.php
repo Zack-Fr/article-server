@@ -16,48 +16,9 @@ if (strpos($request, $base_dir) === 0) {
 if ($request == '') {
     $request = '/';
 }
-$method = $_SERVER['REQUEST_METHOD'];
-//Examples: 
-//http://localhost/getArticles -------> $request = "getArticles"
-//http://localhost/ -------> $request = "/" (why? because of the if)
-
-// This block is used to extract the route name from the URL
-//----------------------------------------------------------
-
-// switch ("$method $request"){
-// //Methods and apis
-// //--------------- Articles Api's
-//     case 'GET /articles':
-//         require __DIR__. '/../controllers/ArticleController.php';
-//     case 'POST /delete_articles':
-//         require __DIR__. '/../controllers/ArticleController.php';
-// //--------------- User Api's
-//     case 'POST /login':
-//         require __DIR__. '/../controllers/AuthController.php';
-//     case 'POST /register':
-//         require __DIR__. '/../controllers/AuthController.php';
-//         break;
-//    //fallback     
-//     default:
-//         http_response_code(404);
-//         echo json_encode([
-//             'error' => 'Endpoint not found',
-//             'method' => $method,
-//             'uri'    => $request,
-//             'scriptName' => $base_dir,
-//             // 'requestUri' =>$requestUri
-            
-//         ]);
-        
-//         break;
-//     }
-
 
 //Routing starts here (Mapping between the request and the controller & method names)
 //It's an key-value array where the value is an key-value array
-//----------------------------------------------------------
-/* The `` array is serving as a routing table in the PHP code. It maps specific URL routes to
-corresponding controller and method names. */
 //=========================articles
 $apis = [
     '/get_articles'         => ['controller' => 'ArticleController', 'method' => 'getAllArticles'],
@@ -98,7 +59,7 @@ if (isset($apis[$request])) {
     $controller_name = $apis[$request]['controller']; //if $request == /articles, then the $controller_name will be "ArticleController" 
     $method = $apis[$request]['method'];
     require_once "controllers/{$controller_name}.php";
-
+    // echo $controller_name;
     $controller = new $controller_name();
     if (method_exists($controller, $method)) {
         $controller->$method();
